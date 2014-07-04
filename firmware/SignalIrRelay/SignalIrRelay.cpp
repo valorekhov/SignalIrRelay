@@ -142,20 +142,40 @@ int main (void)
 					temp = readTemperature();
 					
 					//Cooling/heating mode speed selections. Values are in C, x10 to represent fractional C values as int
-					if (temp >= 285 || temp <= 190)
+					if (temp >= 290 || temp <= 190)
 						speed = 3;
-						else if (temp >= 265 || temp <= 200)
+						else if (temp >= 275 || temp <= 200)
 						  speed = 2; 
 						  else speed = 1;
 				    if (speed != currentSpeed){
+						char dif = speed - currentSpeed;
+						if (dif > 0){			// Ramp up by stepping through speeds incrementally
+							for(uint8_t i = currentSpeed + 1; i< speed; i++){
+								fan(i);
+								_delay_ms(5000);
+							}
+						} 
 						fan(speed);
 						zoneTicks = 300;
 					}
 				}
 			}  else {
 				if ( (switchValue ^ state) && switchValue ){ // switch is off, action on edge transition
-					fan(0);
-					zoneTicks = 0;				
+					LED1(PORT) = 1;
+					//Ramp down: run fan on low for approx 15 min to equalize dT between Tcoil and Tambient
+					if (speed != 1)
+						fan(1);
+					for(uint16_t i = 0; i< 900; i++){
+						switchValue = getSwitchReading();
+						if (!switchValue)				//call for Fan came in during the ramp down period
+							break;
+						_delay_ms(900);
+					}					
+					LED1(PORT) = 0;
+					zoneTicks = 0;
+
+					if (switchValue)					//no call for Fan at the end of ramp down, turn fan off.
+						fan(0);
 				}
 				speed = 0;	
 			}
