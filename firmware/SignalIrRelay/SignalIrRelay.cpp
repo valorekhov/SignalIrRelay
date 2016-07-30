@@ -67,11 +67,11 @@ uint16_t readAdc(uint8_t ch){
 	ADMUX = (ADMUX & 0xF8)|ch; // clears the bottom 3 bits before ORing
 	
 	// start single conversion
-	// write ’1? to ADSC
+	// write ï¿½1? to ADSC
 	ADCSRA |= (1<<ADSC);
 	
 	// wait for conversion to complete
-	// ADSC becomes ’0? again
+	// ADSC becomes ï¿½0? again
 	// till then, run loop continuously
 	while(ADCSRA & (1<<ADSC));
 	return (ADC);
@@ -142,9 +142,9 @@ int main (void)
 					temp = readTemperature();
 					
 					//Cooling/heating mode speed selections. Values are in C, x10 to represent fractional C values as int
-					if (temp >= 290 || temp <= 190)
+					if (temp >= 320 || temp <= 190)
 						speed = 3;
-						else if (temp >= 275 || temp <= 200)
+						else if (temp >= 290 || temp <= 200)
 						  speed = 2; 
 						  else speed = 1;
 				    if (speed != currentSpeed){
@@ -165,7 +165,7 @@ int main (void)
 					//Ramp down: run fan on low for approx 15 min to equalize dT between Tcoil and Tambient
 					if (speed != 1)
 						fan(1);
-					for(uint16_t i = 0; i< 900; i++){
+					for(uint16_t i = 0; i< 450; i++){
 						switchValue = getSwitchReading();
 						if (!switchValue)				//call for Fan came in during the ramp down period
 							break;
