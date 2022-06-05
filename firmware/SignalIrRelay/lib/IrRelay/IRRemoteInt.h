@@ -18,7 +18,7 @@
 
 #include <stdint.h>
 #include <avr/io.h>
-#include "..\Board.h"
+//#include "..\Board.h"
 
 // define which timer to use
 //
