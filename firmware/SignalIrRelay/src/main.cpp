@@ -181,10 +181,10 @@ int main (void)
 			}  else {
 				if ( (switchValue ^ state) && switchValue ){ // switch is off, action on edge transition
 					LED1(PORT) = 1;
-					//Ramp down: run fan on low for approx 15 min to equalize dT between Tcoil and Tambient
+					//Ramp down: run fan on low for approx < 1 min to equalize dT between Tcoil and Tambient
 					if (speed != 1)
 						fan(1);
-					for(uint16_t i = 0; i< 450; i++){
+					for(uint16_t i = 0; i< 5; i++){
 						switchValue = getSwitchReading();
 						if (!switchValue)				//call for Fan came in during the ramp down period
 							break;

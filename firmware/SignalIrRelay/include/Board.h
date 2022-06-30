@@ -12,7 +12,7 @@
 #include <stdint.h>
 #include <avr/io.h>
 
-#define F_CPU 8000000L
+//#define F_CPU 8000000L
 
 struct bits {
 	uint8_t b0:1;
